@@ -9,18 +9,22 @@ struct Inputs {
 }
 
 public class CharController : MonoBehaviour {
-    public float moveForce;
-    public float jumpForce;
-    public float gravMult;
+    public float moveForce = 1400f;
+    public float jumpForce = 30f;
+    public float gravMult = 9.81f;
+    public float jumpCheckYOffset = 0.04f;
+    public float jumpCheckRadOffset = 0.975f;
 
     private Inputs curInputs;
     private Rigidbody RB3D;
-    private int grounds = 0;
+    private Collider col;
     private float sqrt2 = 0;
+    private bool grounded = false;
 
     // Start is called before the first frame update
     void Start() {
         RB3D = gameObject.GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
         sqrt2 = 1f / Mathf.Sqrt(2);         //sqrt is a fairly intensive operation, storing it in memory to avoid using opertaion every fixed update
     }
 
@@ -34,10 +38,12 @@ public class CharController : MonoBehaviour {
         if (curInputs.tempAxis.x != 0f) curInputs.axis.x += curInputs.tempAxis.x;
         if (curInputs.tempAxis.y != 0f) curInputs.axis.y += curInputs.tempAxis.y;
         ++curInputs.framesPassed;
-        if (Input.GetButtonDown("Jump") && curInputs.jump == 0 && grounds > 0) curInputs.jump = 5;
+        if (Input.GetButtonDown("Jump") && curInputs.jump == 0 && grounded) curInputs.jump = 5;
     }
 
     private void FixedUpdate() {
+        grounded = isGrounded();
+
         //if both inputs were pressed then normalize inputs
         if (curInputs.axis.x != 0f && curInputs.axis.y != 0f)
             curInputs.axis.Set(curInputs.axis.x * sqrt2, curInputs.axis.y * sqrt2);
@@ -53,27 +59,24 @@ public class CharController : MonoBehaviour {
         }
 
         //jump on maxed cooldown
-        if (curInputs.jump == 5)
+        if (curInputs.jump == 5) {
             RB3D.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+            --curInputs.jump;
+        }
         
         //reduce jump cooldown if grounded
-        if (curInputs.jump > 0 && grounds > 0)
+        if (curInputs.jump > 0 && grounded)
             --curInputs.jump;
 
         //Add downwards force if ungrounded (RB3D has drag)
-        if (grounds <= 0)
+        if (!grounded)
             RB3D.AddForce(Physics.gravity * gravMult, ForceMode.Acceleration);
 
         curInputs.framesPassed = 0;
     }
 
-    //TODO: add/remove col references to dynamic array for checking each active collision if their hit normal is at a threshhold for grounded when needed (function called by jumping)
-    private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.CompareTag("Ground"))
-            ++grounds;
-    }
-    private void OnCollisionExit(Collision collision) {
-        if (collision.gameObject.CompareTag("Ground"))
-            --grounds;
+    bool isGrounded() {
+        int layer = ~(1 << LayerMask.NameToLayer("Player"));
+        return Physics.CheckSphere(transform.position + (Vector3.down * jumpCheckYOffset), col.bounds.extents.x * jumpCheckRadOffset, layer);
     }
 }
