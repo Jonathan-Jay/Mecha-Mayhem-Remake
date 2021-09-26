@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuButtons : MonoBehaviour
 {
@@ -17,10 +18,11 @@ public class MenuButtons : MonoBehaviour
     }
     public void PlayPress()
     {
-
+        SceneManager.LoadScene("JJ's Character importing");
+        
     }
     public void ExitPress()
     {
-        UnityEngine.Application.Quit();
+       Application.Quit();
     }
 }
