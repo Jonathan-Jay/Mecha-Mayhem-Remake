@@ -20,25 +20,31 @@ public class CharController : MonoBehaviour {
     private Collider col;
     private float sqrt2 = 0;
     private bool grounded = false;
+	private Animator anim;
 
-    // Start is called before the first frame update
-    void Start() {
-        RB3D = gameObject.GetComponent<Rigidbody>();
+	// Start is called before the first frame update
+	void Start() {
+		anim = GetComponent<Animator>();
+		RB3D = gameObject.GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
         sqrt2 = 1f / Mathf.Sqrt(2);         //sqrt is a fairly intensive operation, storing it in memory to avoid using opertaion every fixed update
     }
 
-    // Update is called once per frame
-    void Update() {
-        if (Cursor.visible)
-            return;
+	// Update is called once per frame
+	void Update()
+	{
+		if (Cursor.visible)
+			return;
 
-        //Store input from each update to be considered for fixed updates, dont do needless addition of 0 if unneeded
-        curInputs.tempAxis.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        if (curInputs.tempAxis.x != 0f) curInputs.axis.x += curInputs.tempAxis.x;
-        if (curInputs.tempAxis.y != 0f) curInputs.axis.y += curInputs.tempAxis.y;
-        ++curInputs.framesPassed;
+		bool movement = false;
+
+		//Store input from each update to be considered for fixed updates, dont do needless addition of 0 if unneeded
+		curInputs.tempAxis.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+		if (curInputs.tempAxis.x != 0f) {	curInputs.axis.x += curInputs.tempAxis.x;	movement = true;	}
+		if (curInputs.tempAxis.y != 0f) {	curInputs.axis.y += curInputs.tempAxis.y;	movement = true;	}
+			++curInputs.framesPassed;
         if (Input.GetButtonDown("Jump") && curInputs.jump == 0 && grounded) curInputs.jump = 5;
+		anim.SetBool("schmooving", movement);
     }
 
     private void FixedUpdate() {
@@ -48,15 +54,15 @@ public class CharController : MonoBehaviour {
         if (curInputs.axis.x != 0f && curInputs.axis.y != 0f)
             curInputs.axis.Set(curInputs.axis.x * sqrt2, curInputs.axis.y * sqrt2);
 
-        if (curInputs.axis.x != 0f) {
+		if (curInputs.axis.x != 0f) {
             RB3D.AddForce(transform.right * moveForce * curInputs.axis.x / curInputs.framesPassed * Time.fixedDeltaTime);
             curInputs.axis.x = 0f;
-        }
+		}
 
         if (curInputs.axis.y != 0f) {
             RB3D.AddForce(transform.forward * moveForce * curInputs.axis.y / curInputs.framesPassed * Time.fixedDeltaTime);
             curInputs.axis.y = 0f;
-        }
+		}
 
         //jump on maxed cooldown
         if (curInputs.jump == 5) {
