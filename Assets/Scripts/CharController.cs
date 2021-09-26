@@ -12,7 +12,7 @@ public class CharController : MonoBehaviour {
     public float moveForce = 1400f;
     public float jumpForce = 30f;
     public float gravMult = 9.81f;
-    public float jumpCheckYOffset = 0.04f;
+    public float jumpCheckYOffset = 0.52f;
     public float jumpCheckRadOffset = 0.975f;
 
     private Inputs curInputs;
