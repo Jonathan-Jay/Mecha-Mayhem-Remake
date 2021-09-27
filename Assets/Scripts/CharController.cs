@@ -12,15 +12,16 @@ public class CharController : MonoBehaviour {
     public float moveForce = 1400f;
     public float jumpForce = 30f;
     public float gravMult = 9.81f;
-    public float jumpCheckYOffset = 0.04f;
+    public float rotateArmature = 0f;
+    public float jumpCheckYOffset = 0.52f;
     public float jumpCheckRadOffset = 0.975f;
 
     private Inputs curInputs;
     private Rigidbody RB3D;
     private Collider col;
+    private Animator anim;
     private float sqrt2 = 0;
     private bool grounded = false;
-	private Animator anim;
 
 	// Start is called before the first frame update
 	void Start() {
@@ -28,6 +29,8 @@ public class CharController : MonoBehaviour {
 		RB3D = gameObject.GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
         sqrt2 = 1f / Mathf.Sqrt(2);         //sqrt is a fairly intensive operation, storing it in memory to avoid using opertaion every fixed update
+
+        transform.GetChild(0).transform.Rotate(0f, 0f, rotateArmature);
     }
 
 	// Update is called once per frame
@@ -49,6 +52,7 @@ public class CharController : MonoBehaviour {
 
     private void FixedUpdate() {
         grounded = isGrounded();
+        Debug.Log(grounded);
 
         //if both inputs were pressed then normalize inputs
         if (curInputs.axis.x != 0f && curInputs.axis.y != 0f)
@@ -83,6 +87,12 @@ public class CharController : MonoBehaviour {
 
     bool isGrounded() {
         int layer = ~(1 << LayerMask.NameToLayer("Player"));
+        /*Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.down * col.bounds.extents.x * jumpCheckRadOffset, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.up * col.bounds.extents.x * jumpCheckRadOffset, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.forward * col.bounds.extents.x * jumpCheckRadOffset, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.back * col.bounds.extents.x * jumpCheckRadOffset, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.left * col.bounds.extents.x * jumpCheckRadOffset, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.right * col.bounds.extents.x * jumpCheckRadOffset, Color.red);*/
         return Physics.CheckSphere(transform.position + (Vector3.down * jumpCheckYOffset), col.bounds.extents.x * jumpCheckRadOffset, layer);
     }
 }
