@@ -34,7 +34,7 @@ public class LazerBeam : MonoBehaviour
     {
 		Vector3 averagePos = start + (end - start) * 0.5f;
 		GameObject instant = Instantiate(prefab, averagePos, Quaternion.identity);
-		instant.transform.LookAt(end, Vector3.up);
+		instant.transform.LookAt(end);
 
 		//give laser for safety
 		LazerBeam laser = null;

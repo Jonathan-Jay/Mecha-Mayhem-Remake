@@ -52,7 +52,7 @@ public class CharController : MonoBehaviour {
 
     private void FixedUpdate() {
         grounded = isGrounded();
-        Debug.Log(grounded);
+        //Debug.Log(grounded);
 
         //if both inputs were pressed then normalize inputs
         if (curInputs.axis.x != 0f && curInputs.axis.y != 0f)

@@ -6,6 +6,7 @@ public class DeleteThis : MonoBehaviour
 {
 	public GameObject cube;
 	public Transform target;
+	public Transform shootStart;
 
 	// Start is called before the first frame update
 	void Start()
@@ -17,7 +18,7 @@ public class DeleteThis : MonoBehaviour
     void Update()
     {
         if (Input.GetKey(KeyCode.E)) {
-			LazerBeam.CreateBeam(cube, transform.position, target.position, 0.5f);
+			LazerBeam.CreateBeam(cube, shootStart.position, target.position, 0.5f);
 		}
     }
 }
