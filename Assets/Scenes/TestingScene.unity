@@ -326,9 +326,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef1b92b9753128478df625162bbe8aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSpeed: 100
-  scanRadius: 135
+  turnSpeed: 0.1
+  scanFOV: 90
+  snapSpeed: 0.5
+  scanRange: 100
+  laserStyle: {fileID: 5147346865382042532, guid: fad4d498daa7da74ca79eef85dba57ce, type: 3}
   verticalViewRange: 30
+  players:
+  - {fileID: 2061521631}
 --- !u!1 &1061626338
 GameObject:
   m_ObjectHideFlags: 0
