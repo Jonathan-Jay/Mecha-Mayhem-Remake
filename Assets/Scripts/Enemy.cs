@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
 	public Transform target;
+	public Vector3 targetOffset;
 	private Rigidbody rb;
 	public float speed = 5;
 	public float timing = 1;
@@ -19,7 +20,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		transform.LookAt(target);
+		transform.LookAt(target.position + targetOffset);
 		if (timing > 0)
 		{
 			counter += Time.deltaTime;
