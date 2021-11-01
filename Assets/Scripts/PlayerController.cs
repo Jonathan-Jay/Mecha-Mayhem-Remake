@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
 	public CharController controller;
 	public HUDManager hud;
+	public Transform hand;
 
     private float health;
     private float dash;
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour
 		if (mainhand != null) {
 			mainhand.Update();
 			if (Input.GetButton("Fire")) {
-				mainhand.Shoot(transform.position, transform.forward);
+				mainhand.Shoot(hand.position, transform.forward);
 				if (mainhand.GetAmmoPercent() <= 0) {
 					hud.SetMainWeapon(IconStorage.gunIcons[(int)Gun.GunType.Empty]);
 					mainhand = null;
