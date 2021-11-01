@@ -4,24 +4,26 @@ using UnityEngine;
 public class CameraController : MonoBehaviour {
     public Transform following;
     public Vector3 orginOffset;
+    public Vector3 orginOffsetWithRotation;
     public Vector2 clipPlaneOffset;
     public float distance;
     public float sensitivity;
     public Vector2 rotXMinMax;
 
     private Camera cam;
+    private Vector3 orginOffsetWithRotationCurrent = Vector3.zero;
+    private Vector3 orginOffsetWithRotationVel = Vector3.zero;
 
     // Start is called before the first frame update
     void Start() {
         cam = GetComponentInChildren<Camera>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        orginOffsetWithRotationCurrent = transform.rotation * orginOffsetWithRotation;
     }
 
     // LateUpdate is called once per frame at the end of everything
     void LateUpdate() {
-        //Debug.Log(transform.rotation.eulerAngles.x - Input.GetAxis("Mouse Y") * sensitivity);
-
         if (Input.GetKeyDown(KeyCode.Escape)) {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -48,14 +50,26 @@ public class CameraController : MonoBehaviour {
         int layer = ~(1 << LayerMask.NameToLayer("Player"));
         RaycastHit ray;
 
+        Vector3 orginOfAll = following.position + orginOffset;
+        Vector3 orginOffsetWithRotationTemp = transform.rotation * orginOffsetWithRotation;
+
+        foreach (int dir in new int[3] { 1, -1, 0 })
+            if (dir == 0 || !Physics.Linecast(orginOfAll, orginOfAll + (orginOffsetWithRotationTemp + transform.right * calc2 * 0.5f) * dir, out ray, layer)) {
+                orginOffsetWithRotationTemp = orginOffsetWithRotationTemp * dir;
+                break;
+            }
+
+        orginOffsetWithRotationCurrent = Vector3.SmoothDamp(orginOffsetWithRotationCurrent, orginOffsetWithRotationTemp, ref orginOffsetWithRotationVel, 0.05f, 1f, Time.fixedDeltaTime);
+        orginOfAll += orginOffsetWithRotationCurrent;
+
         //follow.pos + orgOfst + Vec(0.1 * Pos/Neg(orgOfst.x), 0.1 * Pos/Neg(orgOfst.y), 0)     Pos/Neg() uses bitwise to find signed (but probs not cuz float)
-		//follow.pos + orgOfst + Vec(0.1 * vec.x, 0.1 * vec.y, 0)	vec is (1, 1, 1)
+        //follow.pos + orgOfst + Vec(0.1 * vec.x, 0.1 * vec.y, 0)	vec is (1, 1, 1)
         //getting Hypotnuse dist
         foreach (Vector3 vec in new Vector3[4] { new Vector3(calc2, calc1, calc3), new Vector3(-calc2, calc1, calc3), new Vector3(calc2, -calc1, calc3), new Vector3(-calc2, -calc1, calc3) })
-            if (Physics.Linecast(following.position + orginOffset, following.position + orginOffset + transform.rotation * (Vector3.back * distance + vec), out ray, layer) && ray.distance < calcDist)
+            if (Physics.Linecast(orginOfAll, orginOfAll + transform.rotation * (Vector3.back * distance + vec), out ray, layer) && ray.distance < calcDist)
                 calcDist = ray.distance;
 
         following.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
-        transform.position = following.position + orginOffset - transform.forward * (Mathf.Cos(cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * calcDist);
+        transform.position = orginOfAll - transform.forward * (Mathf.Cos(cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * calcDist);
     }
 }
