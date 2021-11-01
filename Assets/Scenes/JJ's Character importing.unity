@@ -1380,6 +1380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 919132149089522421}
   hud: {fileID: 1427933165}
+  hand: {fileID: 959344026}
 --- !u!1 &954543700552164856
 GameObject:
   m_ObjectHideFlags: 0
