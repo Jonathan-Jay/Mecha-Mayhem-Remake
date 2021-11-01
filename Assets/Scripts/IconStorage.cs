@@ -9,6 +9,7 @@ public class IconStorage : MonoBehaviour
 	public static Sprite[] gunIcons;
 	public Sprite[] tempDigits;
 	public static Sprite[] digits;
+	public GameObject[] players;
 
     void Start()
     {
@@ -16,6 +17,7 @@ public class IconStorage : MonoBehaviour
         Rifle.laserPrefab = laserPrefab;
 		gunIcons = tempGunIcons;
 		digits = tempDigits;
+		TrackingFiring.players = players;
 		Destroy(gameObject);
     }
 }
