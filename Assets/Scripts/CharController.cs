@@ -12,22 +12,28 @@ public class CharController : MonoBehaviour {
     public float moveForce = 1400f;
     public float jumpForce = 30f;
     public float gravMult = 9.81f;
-    public float jumpCheckYOffset = 0.04f;
+    public float rotateArmature = 0f;
+    public float jumpCheckYOffset = 0.52f;
     public float jumpCheckRadOffset = 0.975f;
 
-    private Inputs curInputs;
     private Rigidbody RB3D;
+    private Animator anim;
+
+    private Inputs curInputs;
     private Collider col;
-    private float sqrt2 = 0;
+    static float sqrt2 = 1f / Mathf.Sqrt(2);         //sqrt is a fairly intensive operation, storing it in memory to avoid using opertaion every fixed update
     private bool grounded = false;
-	private Animator anim;
+    private bool dash = false;
+
+	public GameObject dashPrefab;
 
 	// Start is called before the first frame update
 	void Start() {
 		anim = GetComponent<Animator>();
 		RB3D = gameObject.GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
-        sqrt2 = 1f / Mathf.Sqrt(2);         //sqrt is a fairly intensive operation, storing it in memory to avoid using opertaion every fixed update
+
+        transform.GetChild(0).transform.Rotate(0f, 0f, rotateArmature);
     }
 
 	// Update is called once per frame
@@ -48,7 +54,35 @@ public class CharController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
+		if (dash) {
+			//do dash
+			Vector3 velocity = RB3D.velocity;
+			velocity.y = 0;
+			if (velocity.magnitude < 0.1f)
+				velocity = transform.forward;
+			else
+				velocity = velocity.normalized;
+
+			//check for distance
+			RaycastHit data;
+			if (Physics.Raycast(transform.position + Vector3.up, velocity, out data, 10f)) {
+				velocity = data.point - Vector3.up;
+			}
+			else {
+				velocity = transform.position + velocity * 10f;
+			}
+
+			//create laser
+			LazerBeam.CreateBeam(dashPrefab, velocity + Vector3.up, transform.position + Vector3.up, 0.5f);
+
+			//update position
+			transform.position = velocity;
+
+			dash = false;
+		}
+
         grounded = isGrounded();
+        //Debug.Log(grounded);
 
         //if both inputs were pressed then normalize inputs
         if (curInputs.axis.x != 0f && curInputs.axis.y != 0f)
@@ -83,6 +117,16 @@ public class CharController : MonoBehaviour {
 
     bool isGrounded() {
         int layer = ~(1 << LayerMask.NameToLayer("Player"));
+        /*Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.down * col.bounds.extents.x * jumpCheckRadOffset, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.up * col.bounds.extents.x * jumpCheckRadOffset, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.forward * col.bounds.extents.x * jumpCheckRadOffset, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.back * col.bounds.extents.x * jumpCheckRadOffset, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.left * col.bounds.extents.x * jumpCheckRadOffset, Color.red);
+        Debug.DrawRay(transform.position + (Vector3.down * jumpCheckYOffset), Vector3.right * col.bounds.extents.x * jumpCheckRadOffset, Color.red);*/
         return Physics.CheckSphere(transform.position + (Vector3.down * jumpCheckYOffset), col.bounds.extents.x * jumpCheckRadOffset, layer);
     }
+
+	public void DoDash() {
+		dash = true;
+	}
 }

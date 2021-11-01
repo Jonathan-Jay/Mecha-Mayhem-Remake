@@ -23,6 +23,6 @@ public class MenuButtons : MonoBehaviour
     }
     public void ExitPress()
     {
-       Application.Quit();
+    	Application.Quit();
     }
 }
