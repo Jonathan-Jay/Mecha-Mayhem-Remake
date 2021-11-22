@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
 {
+	public GameObject onScreenControls;
+	public Joystick leftJoystick;
+	public Joystick rightJoystick;
+	public bool mobileMode {get; private set;}
+
+
 	public Image tensDigit;
 	public Image onesDigit;
 	public Image offhandWeapon;
@@ -22,7 +28,20 @@ public class HUDManager : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+	{
+		switch (Application.platform)
+		{
+			case RuntimePlatform.WindowsEditor:
+			case RuntimePlatform.Android:
+			case RuntimePlatform.IPhonePlayer:
+				mobileMode = true;
+				break;
+			default:
+				mobileMode = false;
+				break;
+		}
+		onScreenControls.SetActive(mobileMode);
+
         healthBar.maxValue = healthMax;
         healthBar.value = healthMax;
         dashBar.maxValue = dashMax;

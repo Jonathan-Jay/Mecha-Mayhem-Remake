@@ -1071,6 +1071,7 @@ MonoBehaviour:
   rotateArmature: 180
   jumpCheckYOffset: -0.38
   jumpCheckRadOffset: 0.975
+  hud: {fileID: 1427933165}
   dashPrefab: {fileID: 5147346865382042532, guid: 9c2b8172c39a14d4e91162951ed447e3, type: 3}
 --- !u!114 &919132149089522423
 MonoBehaviour:
@@ -2403,6 +2404,30 @@ PrefabInstance:
     - target: {fileID: 2925732015268545841, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5332970266456871209, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -128
+      objectReference: {fileID: 0}
+    - target: {fileID: 5332970266456871209, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 5332970266931350351, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 5332970266931350351, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7107893374087486571, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7969926913095491524, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -113.19995
       objectReference: {fileID: 0}
     - target: {fileID: 7969926913890490787, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
       propertyPath: m_RootOrder

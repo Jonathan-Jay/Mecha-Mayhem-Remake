@@ -13,24 +13,32 @@ public class CameraController : MonoBehaviour {
     private Camera cam;
     private Vector3 orginOffsetWithRotationCurrent = Vector3.zero;
     private Vector3 orginOffsetWithRotationVel = Vector3.zero;
-    private GameController gameController;
+    private HUDManager hud;
 
     // Start is called before the first frame update
     void Start() {
         cam = GetComponentInChildren<Camera>();
-        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        hud = GetComponent<HUDManager>();
+		if (!hud.mobileMode)
+		{
+        	Cursor.lockState = CursorLockMode.Locked;
+        	Cursor.visible = false;
+		}
         orginOffsetWithRotationCurrent = transform.rotation * orginOffsetWithRotation;
     }
 
+	Vector2 lookInput = Vector2.zero;
+
     // LateUpdate is called once per frame at the end of everything
     void LateUpdate() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+		if (hud.mobileMode) {
+        	if (Input.GetKeyDown(KeyCode.Escape)) {
+            	Cursor.lockState = CursorLockMode.None;
+            	Cursor.visible = true;
+			}
         }
-        if (Cursor.visible) {
+
+        if (Cursor.visible && !hud.mobileMode) {
             if (Input.GetMouseButton(0)) {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
@@ -38,7 +46,10 @@ public class CameraController : MonoBehaviour {
         }
         else {
             float rotMod = transform.rotation.eulerAngles.x <= 90 ? transform.rotation.eulerAngles.x + 360 : transform.rotation.eulerAngles.x;
-            Vector2 lookInput = new Vector2(Input.GetAxis("Mouse X") + gameController.rightJoystick.Horizontal, Input.GetAxis("Mouse Y") + gameController.rightJoystick.Vertical);
+            lookInput.Set(
+				Input.GetAxis("Mouse X") + hud.rightJoystick.Horizontal,
+				Input.GetAxis("Mouse Y") + hud.rightJoystick.Vertical
+			);
             transform.rotation = Quaternion.Euler(Mathf.Clamp(rotMod - lookInput.y * sensitivity, rotXMinMax.x, rotXMinMax.y),
                 transform.rotation.eulerAngles.y + lookInput.x * sensitivity, 0);
         }

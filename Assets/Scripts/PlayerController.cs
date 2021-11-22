@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
 
 		if (mainhand != null) {
 			mainhand.Update();
-			if (Input.GetButton("Fire")) {
+			if ((Input.GetButton("Fire") && !hud.mobileMode)) {
 				mainhand.Shoot(gun.GetChild(0).position, hud.transform.forward);
 				if (mainhand.GetAmmoPercent() <= 0) {
 					DropWeapon();
