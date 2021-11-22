@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 	public CharController controller;
 	public HUDManager hud;
 	public Transform hand;
+	Transform gun = null;
 
     private float health;
     private float dash;
@@ -20,8 +21,8 @@ public class PlayerController : MonoBehaviour
 
 		hud.SetScore(0);
 
-		offhand = new Pistol();
-		mainhand = new Rifle();
+		PickUpWeapon(Gun.GunType.Pistol);
+		PickUpWeapon(Gun.GunType.Rifle);
 
 		UpdateHUD();
 	}
@@ -53,11 +54,9 @@ public class PlayerController : MonoBehaviour
 		if (mainhand != null) {
 			mainhand.Update();
 			if (Input.GetButton("Fire")) {
-				mainhand.Shoot(hand.position, transform.forward);
+				mainhand.Shoot(gun.GetChild(0).position, hud.transform.forward);
 				if (mainhand.GetAmmoPercent() <= 0) {
-					hud.SetMainWeapon(IconStorage.gunIcons[(int)Gun.GunType.Empty]);
-					mainhand = null;
-					SwapWeapon();
+					DropWeapon();
 				}
 				else hud.SetAmmoBar(mainhand.GetAmmoPercent());
 			}
@@ -70,6 +69,11 @@ public class PlayerController : MonoBehaviour
 		mainhand = temp;
 		hud.SwapWeapons();
 		if (mainhand != null) {
+			if (gun != null) {
+				Destroy(gun.gameObject);
+			}
+			gun = Instantiate(IconStorage.gunPrefabs[(int)mainhand.GetGunType()], hand).transform;
+
 			mainhand.SetCooldown(2f);
 			hud.SetAmmoBar(mainhand.GetAmmoPercent());
 		}
@@ -79,9 +83,51 @@ public class PlayerController : MonoBehaviour
 	void UpdateHUD() {
 		hud.SetHealth(health);
 		hud.SetDash(dash);
-		hud.SetOffhandWeapon(IconStorage.gunIcons[(int)offhand.GetGunType()]);
-		hud.SetMainWeapon(IconStorage.gunIcons[(int)mainhand.GetGunType()]);
+		if (offhand != null)
+			hud.SetOffhandWeapon(IconStorage.gunIcons[(int)offhand.GetGunType()]);
+		if (mainhand != null)
+			hud.SetMainWeapon(IconStorage.gunIcons[(int)mainhand.GetGunType()]);
+		
 		if (mainhand == null)	hud.SetAmmoBar(0f);
 		else	hud.SetAmmoBar(mainhand.GetAmmoPercent());
+	}
+
+	void DropWeapon() {
+		if (mainhand != null) {
+			hud.SetMainWeapon(IconStorage.gunIcons[(int)Gun.GunType.Empty]);
+			mainhand = null;
+			Destroy(gun.gameObject);
+			SwapWeapon();
+		}
+	}
+
+	public bool PickUpWeapon(Gun.GunType weapon) {
+		//first check if main hand is empty
+		if (mainhand == null) {
+			//if main is empty, you can give gun right away
+			mainhand = IconStorage.GetGunFromType(weapon);
+			if (weapon != Gun.GunType.Empty) {
+				gun = Instantiate(IconStorage.gunPrefabs[(int)weapon], hand).transform;
+			}
+			UpdateHUD();
+			return true;
+		}
+		//then if it matches
+		else if (mainhand.GetGunType() == weapon) {
+			mainhand.Reload();
+			return true;
+		}
+		//then if offhand is empty
+		else if (offhand == null) {
+			offhand = IconStorage.GetGunFromType(weapon);
+			UpdateHUD();
+			return true;
+		}
+		//then if it matches
+		else if (offhand.GetGunType() == weapon) {
+			offhand.Reload();
+			return true;
+		}
+		return false;
 	}
 }

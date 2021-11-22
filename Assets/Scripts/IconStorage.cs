@@ -7,6 +7,8 @@ public class IconStorage : MonoBehaviour
 	public GameObject laserPrefab;
 	public Sprite[] tempGunIcons;
 	public static Sprite[] gunIcons;
+	public GameObject[] tempGuns;
+	public static GameObject[] gunPrefabs;
 	public Sprite[] tempDigits;
 	public static Sprite[] digits;
 	public GameObject[] players;
@@ -16,8 +18,17 @@ public class IconStorage : MonoBehaviour
         Pistol.laserPrefab = laserPrefab;
         Rifle.laserPrefab = laserPrefab;
 		gunIcons = tempGunIcons;
+		gunPrefabs = tempGuns;
 		digits = tempDigits;
 		TrackingFiring.players = players;
 		Destroy(gameObject);
     }
+
+	public static Gun GetGunFromType(Gun.GunType type) {
+		switch (type) {
+			case Gun.GunType.Pistol:	return new Pistol();
+			case Gun.GunType.Rifle:		return new Rifle();
+			default:	return null;
+		}
+	}
 }
