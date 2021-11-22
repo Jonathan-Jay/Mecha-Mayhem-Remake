@@ -22,8 +22,11 @@ public class Pistol : Gun
 		return false;
 	}
 
-	public void Reload() {
+	public bool Reload() {
+		if (ammo == 30)
+			return false;
 		ammo = 30;
+		return true;
 	}
 
     public void Update() {

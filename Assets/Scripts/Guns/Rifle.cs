@@ -24,9 +24,12 @@ public class Rifle : Gun
 		return false;
 	}
 
-	public void Reload()
+	public bool Reload()
 	{
+		if (ammo == 10)
+			return false;
 		ammo = 10;
+		return true;
 	}
 
 	public void Update()

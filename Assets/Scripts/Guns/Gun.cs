@@ -15,7 +15,7 @@ public interface Gun
 
 
     bool Shoot(Vector3 start, Vector3 direction);
-	void Reload();
+	bool Reload();
 	void Update();
 	void SetCooldown(float amt);
 	float GetAmmoPercent();

@@ -114,8 +114,11 @@ public class PlayerController : MonoBehaviour
 		}
 		//then if it matches
 		else if (mainhand.GetGunType() == weapon) {
-			mainhand.Reload();
-			return true;
+			if (mainhand.Reload()) {
+				hud.SetAmmoBar(mainhand.GetAmmoPercent());
+				return true;
+			}
+			else	return false;
 		}
 		//then if offhand is empty
 		else if (offhand == null) {
@@ -125,8 +128,7 @@ public class PlayerController : MonoBehaviour
 		}
 		//then if it matches
 		else if (offhand.GetGunType() == weapon) {
-			offhand.Reload();
-			return true;
+			return offhand.Reload();
 		}
 		return false;
 	}
