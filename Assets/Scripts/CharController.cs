@@ -24,6 +24,7 @@ public class CharController : MonoBehaviour {
     static float sqrt2 = 1f / Mathf.Sqrt(2);         //sqrt is a fairly intensive operation, storing it in memory to avoid using opertaion every fixed update
     private bool grounded = false;
     private bool dash = false;
+    private GameController gameController;
 
 	public GameObject dashPrefab;
 
@@ -32,6 +33,8 @@ public class CharController : MonoBehaviour {
 		anim = GetComponent<Animator>();
 		RB3D = gameObject.GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        sqrt2 = 1f / Mathf.Sqrt(2);         //sqrt is a fairly intensive operation, storing it in memory to avoid using opertaion every fixed update
 
         transform.GetChild(0).transform.Rotate(0f, 0f, rotateArmature);
     }
@@ -45,10 +48,11 @@ public class CharController : MonoBehaviour {
 		bool movement = false;
 
 		//Store input from each update to be considered for fixed updates, dont do needless addition of 0 if unneeded
-		curInputs.tempAxis.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-		if (curInputs.tempAxis.x != 0f) {	curInputs.axis.x += curInputs.tempAxis.x;	movement = true;	}
-		if (curInputs.tempAxis.y != 0f) {	curInputs.axis.y += curInputs.tempAxis.y;	movement = true;	}
-			++curInputs.framesPassed;
+		curInputs.tempAxis.Set(Input.GetAxisRaw("Horizontal") + gameController.leftJoystick.Horizontal, Input.GetAxisRaw("Vertical") + gameController.leftJoystick.Vertical);
+        curInputs.tempAxis.Normalize();
+        if (curInputs.tempAxis.x != 0f) { curInputs.axis.x += curInputs.tempAxis.x;	movement = true; }
+		if (curInputs.tempAxis.y != 0f) { curInputs.axis.y += curInputs.tempAxis.y;	movement = true; }
+        ++curInputs.framesPassed;
         if (Input.GetButtonDown("Jump") && curInputs.jump == 0 && grounded) curInputs.jump = 5;
 		anim.SetBool("schmooving", movement);
     }

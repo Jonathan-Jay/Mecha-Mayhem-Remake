@@ -13,10 +13,12 @@ public class CameraController : MonoBehaviour {
     private Camera cam;
     private Vector3 orginOffsetWithRotationCurrent = Vector3.zero;
     private Vector3 orginOffsetWithRotationVel = Vector3.zero;
+    private GameController gameController;
 
     // Start is called before the first frame update
     void Start() {
         cam = GetComponentInChildren<Camera>();
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         orginOffsetWithRotationCurrent = transform.rotation * orginOffsetWithRotation;
@@ -36,8 +38,9 @@ public class CameraController : MonoBehaviour {
         }
         else {
             float rotMod = transform.rotation.eulerAngles.x <= 90 ? transform.rotation.eulerAngles.x + 360 : transform.rotation.eulerAngles.x;
-            transform.rotation = Quaternion.Euler(Mathf.Clamp(rotMod - Input.GetAxis("Mouse Y") * sensitivity, rotXMinMax.x, rotXMinMax.y),
-                transform.rotation.eulerAngles.y + Input.GetAxis("Mouse X") * sensitivity, 0);
+            Vector2 lookInput = new Vector2(Input.GetAxis("Mouse X") + gameController.rightJoystick.Horizontal, Input.GetAxis("Mouse Y") + gameController.rightJoystick.Vertical);
+            transform.rotation = Quaternion.Euler(Mathf.Clamp(rotMod - lookInput.y * sensitivity, rotXMinMax.x, rotXMinMax.y),
+                transform.rotation.eulerAngles.y + lookInput.x * sensitivity, 0);
         }
 
         //Info provided is Camera FoV/Aspect Ratio/Near Clip Plane, get topleft of Near Clip Plane's local position in rectagular cordinates
@@ -45,8 +48,6 @@ public class CameraController : MonoBehaviour {
         float calc2 = calc1 * cam.aspect + clipPlaneOffset.x;
         float calc3 = cam.nearClipPlane - clipPlaneOffset.y;
         float calcDist = distance;
-        //Vector3 calVec = new Vector3(calc2, calc1, calc3);
-        //Vector3 cenOfst = new Vector3(0.1f, 0.1f, 0.1f);
         int layer = ~(1 << LayerMask.NameToLayer("Player"));
         RaycastHit ray;
 
@@ -62,8 +63,6 @@ public class CameraController : MonoBehaviour {
         orginOffsetWithRotationCurrent = Vector3.SmoothDamp(orginOffsetWithRotationCurrent, orginOffsetWithRotationTemp, ref orginOffsetWithRotationVel, 0.05f, 1f, Time.fixedDeltaTime);
         orginOfAll += orginOffsetWithRotationCurrent;
 
-        //follow.pos + orgOfst + Vec(0.1 * Pos/Neg(orgOfst.x), 0.1 * Pos/Neg(orgOfst.y), 0)     Pos/Neg() uses bitwise to find signed (but probs not cuz float)
-        //follow.pos + orgOfst + Vec(0.1 * vec.x, 0.1 * vec.y, 0)	vec is (1, 1, 1)
         //getting Hypotnuse dist
         foreach (Vector3 vec in new Vector3[4] { new Vector3(calc2, calc1, calc3), new Vector3(-calc2, calc1, calc3), new Vector3(calc2, -calc1, calc3), new Vector3(-calc2, -calc1, calc3) })
             if (Physics.Linecast(orginOfAll, orginOfAll + transform.rotation * (Vector3.back * distance + vec), out ray, layer) && ray.distance < calcDist)
