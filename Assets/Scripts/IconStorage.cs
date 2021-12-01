@@ -17,6 +17,8 @@ public class IconStorage : MonoBehaviour
     {
         Pistol.laserPrefab = laserPrefab;
         Rifle.laserPrefab = laserPrefab;
+        Shotgun.laserPrefab = laserPrefab;
+        Minigun.laserPrefab = laserPrefab;
 		gunIcons = tempGunIcons;
 		gunPrefabs = tempGuns;
 		digits = tempDigits;
@@ -28,6 +30,8 @@ public class IconStorage : MonoBehaviour
 		switch (type) {
 			case Gun.GunType.Pistol:	return new Pistol();
 			case Gun.GunType.Rifle:		return new Rifle();
+			case Gun.GunType.MachineGun:		return new Minigun();
+			case Gun.GunType.Shotgun:		return new Shotgun();
 			default:	return null;
 		}
 	}

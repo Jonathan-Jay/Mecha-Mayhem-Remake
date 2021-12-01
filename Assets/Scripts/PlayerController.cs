@@ -21,8 +21,8 @@ public class PlayerController : MonoBehaviour
 
 		hud.SetScore(0);
 
-		PickUpWeapon(Gun.GunType.Pistol);
-		PickUpWeapon(Gun.GunType.Rifle);
+		//PickUpWeapon(Gun.GunType.Pistol);
+		//PickUpWeapon(Gun.GunType.Rifle);
 
 		UpdateHUD();
 	}

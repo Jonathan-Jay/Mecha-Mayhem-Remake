@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//2
-public class Rifle : Gun
+//4
+public class Shotgun : Gun
 {
 	static float damage = 50f;
 	static float range = 100f;
@@ -20,7 +20,16 @@ public class Rifle : Gun
 		{
 			--ammo;
 			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
-			cooldown = 1.5f;
+			direction = Quaternion.AngleAxis(15f, Vector3.up) * direction;
+			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
+			direction = Quaternion.AngleAxis(-30f, Vector3.up) * direction;
+			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
+			direction = Quaternion.AngleAxis(15f, Vector3.up) * direction;
+			direction = Quaternion.AngleAxis(15f, Vector3.right) * direction;
+			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
+			direction = Quaternion.AngleAxis(-30f, Vector3.right) * direction;
+			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
+			cooldown = 1.25f;
 		}
 		return false;
 	}
@@ -53,6 +62,6 @@ public class Rifle : Gun
 
 	public Gun.GunType GetGunType()
 	{
-		return Gun.GunType.Rifle;
+		return Gun.GunType.Shotgun;
 	}
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//1
 public class Pistol : Gun
 {
 	static float damage = 15f;
@@ -17,7 +18,7 @@ public class Pistol : Gun
 		if (cooldown <= 0) {
 			--ammo;
 			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
-			cooldown = 0.1f;
+			cooldown = 0.5f;
 		}
 		return false;
 	}

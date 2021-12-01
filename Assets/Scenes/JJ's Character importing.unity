@@ -213,11 +213,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451864023807940277, guid: 1f78830dd82e2b94e9381bdd2a302f95, type: 3}
       propertyPath: options.Array.data[2]
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 451864023807940277, guid: 1f78830dd82e2b94e9381bdd2a302f95, type: 3}
       propertyPath: options.Array.data[3]
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 451864023807940279, guid: 1f78830dd82e2b94e9381bdd2a302f95, type: 3}
       propertyPath: m_RootOrder
@@ -400,12 +400,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4622d56f7789ad84f8b78c5097104ef1, type: 3}
   - {fileID: 21300000, guid: 0af56f7d17a2b724a8b61d8a81b83b11, type: 3}
   - {fileID: 21300000, guid: 90bb1672d29c586449120ac22d37d474, type: 3}
-  - {fileID: 21300000, guid: 8d93a2daef5da5744a1fac55d6b8039f, type: 3}
   - {fileID: 21300000, guid: db89519ac2fb5774aac4c6b664cb00b5, type: 3}
+  - {fileID: 21300000, guid: 8d93a2daef5da5744a1fac55d6b8039f, type: 3}
   tempGuns:
   - {fileID: 0}
   - {fileID: 7082675625054260814, guid: a8ba6c8e96ad88f42a10b00f8491872e, type: 3}
-  - {fileID: 7082675625054260814, guid: 310682d3df7690441abc8bfaaa46c668, type: 3}
+  - {fileID: 2248439715921793560, guid: 310682d3df7690441abc8bfaaa46c668, type: 3}
+  - {fileID: 4852367165276636457, guid: b50934572b649f447a34b94bc20dc6c3, type: 3}
+  - {fileID: 8346506499461330869, guid: d4a8f8b0b7801b34c9e383964b3bc6f3, type: 3}
   tempDigits:
   - {fileID: 21300000, guid: 25c6fc1acf2ce28408af22ec21345cbf, type: 3}
   - {fileID: 21300000, guid: 9cc2258567f33614d93905af5cd36ba8, type: 3}

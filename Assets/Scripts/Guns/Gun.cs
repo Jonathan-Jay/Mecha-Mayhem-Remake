@@ -9,8 +9,8 @@ public interface Gun
 		Pistol,
 		Rifle,
 		MachineGun,
-		Cannon,
 		Shotgun,
+		Cannon,
 	}
 
 
