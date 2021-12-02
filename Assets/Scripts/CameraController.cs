@@ -39,17 +39,25 @@ public class CameraController : MonoBehaviour {
         }
 
         if (Cursor.visible && !hud.mobileMode) {
-            if (Input.GetMouseButton(0)) {
+            if (Input.GetMouseButton(0) && !IconStorage.changing) {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
         }
         else {
             float rotMod = transform.rotation.eulerAngles.x <= 90 ? transform.rotation.eulerAngles.x + 360 : transform.rotation.eulerAngles.x;
-            lookInput.Set(
-				Input.GetAxis("Mouse X") + hud.rightJoystick.Horizontal,
-				Input.GetAxis("Mouse Y") + hud.rightJoystick.Vertical
-			);
+            if (hud.mobileMode) {
+				lookInput.Set(
+					hud.rightJoystick.Horizontal,
+					hud.rightJoystick.Vertical
+				);
+			}
+			else {
+				lookInput.Set(
+					Input.GetAxis("Mouse X"),
+					Input.GetAxis("Mouse Y")
+				);
+			}
             transform.rotation = Quaternion.Euler(Mathf.Clamp(rotMod - lookInput.y * sensitivity, rotXMinMax.x, rotXMinMax.y),
                 transform.rotation.eulerAngles.y + lookInput.x * sensitivity, 0);
         }

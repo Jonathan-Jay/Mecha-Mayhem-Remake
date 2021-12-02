@@ -41,9 +41,10 @@ GameObject:
   m_Component:
   - component: {fileID: 416127775866079348}
   - component: {fileID: 1048690746478793423}
+  - component: {fileID: 346100246724926279}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Untagged
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,17 +77,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef1b92b9753128478df625162bbe8aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 100
   turnSpeed: 0.5
   scanFOV: 135
   scanRotationAngle: 135
   snapSpeed: 1
   scanRange: 100
+  delayPerShot: 0.2
+  damage: 1
   body: {fileID: 3005295878937053475}
   muzzel: {fileID: 1562197205398092486}
   barrel: {fileID: 1091700613939128213}
   barrelRotSpeed: 720
   laserStyle: {fileID: 5147346865382042532, guid: fad4d498daa7da74ca79eef85dba57ce, type: 3}
   verticalViewRange: 30
+--- !u!65 &346100246724926279
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048690746478793422}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 5, z: 3}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!1 &1114710675505024473
 GameObject:
   m_ObjectHideFlags: 0

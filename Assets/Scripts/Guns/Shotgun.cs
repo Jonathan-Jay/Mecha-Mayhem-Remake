@@ -13,25 +13,31 @@ public class Shotgun : Gun
 	int ammo = 10;
 	float cooldown = 0;
 
-	public bool Shoot(Vector3 start, Vector3 direction)
+	public int Shoot(Vector3 start, Vector3 direction, Vector3 muzzel)
 	{
+		int killed = 0;
 		//TODO: SHOOT
 		if (cooldown <= 0)
 		{
 			--ammo;
-			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
-			direction = Quaternion.AngleAxis(15f, Vector3.up) * direction;
-			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
-			direction = Quaternion.AngleAxis(-30f, Vector3.up) * direction;
-			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
-			direction = Quaternion.AngleAxis(15f, Vector3.up) * direction;
-			direction = Quaternion.AngleAxis(15f, Vector3.right) * direction;
-			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
-			direction = Quaternion.AngleAxis(-30f, Vector3.right) * direction;
-			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
+			RaycastHit hit;
+			Vector3 endPos = start + direction * range;
+			if (Physics.Raycast(start, direction, out hit, range))
+			{
+				if (hit.transform.CompareTag("Turret"))
+				{
+					if (hit.transform.GetComponent<TrackingFiring>().TakeDamage(damage))
+					{
+						++killed;
+					}
+					++killed;
+				}
+				endPos = hit.point;
+			}
+			LazerBeam.CreateBeam(laserPrefab, muzzel, endPos, 0.1f);
 			cooldown = 1.25f;
 		}
-		return false;
+		return killed;
 	}
 
 	public bool Reload()
@@ -40,6 +46,10 @@ public class Shotgun : Gun
 			return false;
 		ammo = 10;
 		return true;
+	}
+
+	public bool GetAuto() {
+		return false;
 	}
 
 	public void Update()

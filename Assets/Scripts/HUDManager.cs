@@ -10,7 +10,6 @@ public class HUDManager : MonoBehaviour
 	public Joystick rightJoystick;
 	public bool mobileMode {get; private set;}
 
-
 	public Image tensDigit;
 	public Image onesDigit;
 	public Image offhandWeapon;
@@ -31,7 +30,7 @@ public class HUDManager : MonoBehaviour
 	{
 		switch (Application.platform)
 		{
-			//case RuntimePlatform.WindowsEditor:
+			case RuntimePlatform.WindowsEditor:
 			case RuntimePlatform.Android:
 			case RuntimePlatform.IPhonePlayer:
 				mobileMode = true;
@@ -96,12 +95,60 @@ public class HUDManager : MonoBehaviour
 	}
 
 	public void SetHealthPickup(int state) {
-		if (state >= 0 && state <= healthPickupSprite.Length) {
+		if (state > 0 && state <= healthPickupSprite.Length) {
 			healthPickup.enabled = true;
-			healthPickup.sprite = healthPickupSprite[state];
+			healthPickup.sprite = healthPickupSprite[state - 1];
 		}
 		else {
 			healthPickup.enabled = false;
 		}
+	}
+
+
+	public RectButton weaponButton;
+	float dropCounter = 0;
+	public bool GetSwapWeaponInput() {
+		return weaponButton.GetUp();
+	}
+	public bool GetDropWeaponInput() {
+		if (weaponButton.GetUp()) {
+			dropCounter = 0f;
+		}
+		else if (weaponButton.touched && dropCounter >= 0f) {
+			dropCounter += Time.deltaTime;
+			if (dropCounter >= 0.5f) {
+				dropCounter = -1f;
+				return true;
+			}
+		}
+		return false;
+	}
+	public bool DropWeaponHold(bool inputed) {
+		if (dropCounter != 0f && !inputed) {
+			dropCounter = 0f;
+		}
+		else if (inputed && dropCounter >= 0f) {
+			dropCounter += Time.deltaTime;
+			if (dropCounter > 0.5f) {
+				dropCounter = -1f;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public RectButton healButton;
+	public bool GetHealInput() {
+		if (healthPickup.enabled) {
+			return healButton.GetDown();
+		}
+		return false;
+	}
+
+	public RectButton ShootButton;
+	public bool GetShootInput(bool autoMode) {
+		if (autoMode)
+			return ShootButton.touched;
+		return ShootButton.GetDown();
 	}
 }

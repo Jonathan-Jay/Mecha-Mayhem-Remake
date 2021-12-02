@@ -13,20 +13,36 @@ public class Pistol : Gun
 	int ammo = 30;
 	float cooldown = 0;
 
-    public bool Shoot(Vector3 start, Vector3 direction) {
+	public int Shoot(Vector3 start, Vector3 direction, Vector3 muzzel) {
+		int killed = 0;
 		//TODO: SHOOT
 		if (cooldown <= 0) {
 			--ammo;
-			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
+			RaycastHit hit;
+			Vector3 endPos = start + direction * range;
+			if (Physics.Raycast(start, direction, out hit, range)) {
+				if (hit.transform.CompareTag("Turret")) {
+					if (hit.transform.GetComponent<TrackingFiring>().TakeDamage(damage)) {
+						++killed;
+					}
+					++killed;
+				}
+				endPos = hit.point;
+			}
+			LazerBeam.CreateBeam(laserPrefab, muzzel, endPos, 0.1f);
 			cooldown = 0.5f;
 		}
-		return false;
+		return killed;
 	}
 
 	public bool Reload() {
 		if (ammo == 30)
 			return false;
 		ammo = 30;
+		return true;
+	}
+
+	public bool GetAuto() {
 		return true;
 	}
 

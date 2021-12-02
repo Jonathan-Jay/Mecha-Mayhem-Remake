@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class TrackingFiring : MonoBehaviour
 {
+	public float health = 100f;
     public float turnSpeed = 1f;
     public float scanFOV = 135f;
     public float scanRotationAngle = 135f;
     public float snapSpeed = 1f;
     public float scanRange = 100f;
+    public float delayPerShot = 0.2f;
+    public float damage = 1f;
 
 	public Transform body;
 	public Transform muzzel;
@@ -28,6 +31,7 @@ public class TrackingFiring : MonoBehaviour
     Quaternion startRotation;
     Quaternion endRotation;
     float t = 0f;
+    float shootCounter = 0f;
     float tRotation = 0f;
     bool isMoving = true;
     // Start is called before the first frame update
@@ -150,7 +154,12 @@ public class TrackingFiring : MonoBehaviour
             else 
             {
                 body.LookAt(target.transform.position + Vector3.up);
-                LazerBeam.CreateBeam(laserStyle, muzzel.position, target.transform.position + Vector3.up, 0.1f);
+				shootCounter += Time.deltaTime;
+				if (shootCounter > delayPerShot) {
+					shootCounter -= delayPerShot;
+                	LazerBeam.CreateBeam(laserStyle, muzzel.position, target.transform.position + Vector3.up, 0.1f);
+					target.GetComponent<PlayerController>().TakeDamage(damage);
+				}
             }
         }
     }
@@ -169,5 +178,14 @@ public class TrackingFiring : MonoBehaviour
         endRotation = holdSwap;
         isMoving = true;
     }
+
+	public bool TakeDamage(float damage) {
+		health -= damage;
+		if (health <= 0) {
+			Destroy(gameObject);
+			return true;
+		}
+		return false;
+	}
 }
 

@@ -13,46 +13,54 @@ public class Rifle : Gun
 	int ammo = 10;
 	float cooldown = 0;
 
-	public bool Shoot(Vector3 start, Vector3 direction)
-	{
+	public int Shoot(Vector3 start, Vector3 direction, Vector3 muzzel) {
+		int killed = 0;
 		//TODO: SHOOT
-		if (cooldown <= 0)
-		{
+		if (cooldown <= 0) {
 			--ammo;
-			LazerBeam.CreateBeam(laserPrefab, start, start + direction * range, 0.1f);
+			RaycastHit hit;
+			Vector3 endPos = start + direction * range;
+			if (Physics.Raycast(start, direction, out hit, range)) {
+				if (hit.transform.CompareTag("Turret")) {
+					if (hit.transform.GetComponent<TrackingFiring>().TakeDamage(damage)) {
+						++killed;
+					}
+					++killed;
+				}
+				endPos = hit.point;
+			}
+			LazerBeam.CreateBeam(laserPrefab, muzzel, endPos, 0.1f);
 			cooldown = 1.5f;
 		}
-		return false;
+		return killed;
 	}
 
-	public bool Reload()
-	{
+	public bool Reload() {
 		if (ammo == 10)
 			return false;
 		ammo = 10;
 		return true;
 	}
 
-	public void Update()
-	{
-		if (cooldown > 0)
-		{
+	public bool GetAuto() {
+		return false;
+	}
+
+	public void Update() {
+		if (cooldown > 0) {
 			cooldown -= Time.deltaTime;
 		}
 	}
 
-	public void SetCooldown(float amt)
-	{
+	public void SetCooldown(float amt) {
 		cooldown = amt;
 	}
 
-	public float GetAmmoPercent()
-	{
+	public float GetAmmoPercent() {
 		return ((float)ammo) * div;
 	}
 
-	public Gun.GunType GetGunType()
-	{
+	public Gun.GunType GetGunType() {
 		return Gun.GunType.Rifle;
 	}
 }

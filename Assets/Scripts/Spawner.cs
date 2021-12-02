@@ -22,7 +22,9 @@ public class Spawner : MonoBehaviour
         options.RemoveAll(delegate(Gun.GunType current) {
 			return current == Gun.GunType.Empty;
 			});
-		counter = Random.Range(delayMin, delayMax);
+		if (counter == 0) {
+			counter = Random.Range(delayMin, delayMax);
+		}
 		if (gunMesh.transform.childCount > 0) {
 			Destroy(gunMesh.transform.GetChild(0).gameObject);
 		}
@@ -50,7 +52,17 @@ public class Spawner : MonoBehaviour
 
 	private void OnTriggerStay(Collider other) {
 		if (other.CompareTag("Player")) {
-			if (current != Gun.GunType.Empty) {
+			if (current == Gun.GunType.HealPack) {
+				if (other.GetComponent<PlayerController>().PickUpHealPack()) {
+					current = Gun.GunType.Empty;
+					counter = Random.Range(delayMin, delayMax);
+					if (gunMesh.transform.childCount > 0) {
+						Destroy(gunMesh.transform.GetChild(0).gameObject);
+					}
+					spawnerAnimator.SetBool("open", false);
+				}
+			}
+			else if (current != Gun.GunType.Empty) {
 				if (other.GetComponent<PlayerController>().PickUpWeapon(current)) {
 					current = Gun.GunType.Empty;
 					counter = Random.Range(delayMin, delayMax);

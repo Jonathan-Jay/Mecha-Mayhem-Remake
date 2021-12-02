@@ -11,11 +11,13 @@ public interface Gun
 		MachineGun,
 		Shotgun,
 		Cannon,
+		HealPack,
 	}
 
 
-    bool Shoot(Vector3 start, Vector3 direction);
+    int Shoot(Vector3 start, Vector3 direction, Vector3 muzzel);
 	bool Reload();
+	bool GetAuto();
 	void Update();
 	void SetCooldown(float amt);
 	float GetAmmoPercent();
