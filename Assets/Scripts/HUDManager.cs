@@ -167,4 +167,14 @@ public class HUDManager : MonoBehaviour
 
 	public RectButton dashButton;
 	public RectButton jumpButton;
+	public RectButton zoomButton;
+	bool toggled = false;
+
+	public bool GetZoomInput() {
+		if (zoomButton.GetDown()) {
+			toggled = !toggled;
+			zoomButton.GetComponent<Image>().color = toggled ? Color.white : Color.red;
+		}
+		return toggled;
+	}
 }

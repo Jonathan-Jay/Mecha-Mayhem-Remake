@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 	public AudioSource pew;
 	public AudioSource drop;
 	public CharController controller;
+	public CameraController cam;
 	public HUDManager hud;
 	public Transform hand;
 	Transform gun = null;
@@ -46,6 +47,19 @@ public class PlayerController : MonoBehaviour
 				controller.DoDash();
 				dash = 0;
 				hud.SetDash(dash);
+			}
+
+			if (hud.GetZoomInput()) {
+				if (cam.distance != -1f) {
+					cam.distance = -1f;
+					cam.orginOffsetWithRotation.x = 0.5f;
+					cam.sensitivity = 0.9f;
+				}
+			}
+			else if (cam.distance != 3f) {
+				cam.distance = 3f;
+				cam.orginOffsetWithRotation.x = 1f;
+				cam.sensitivity = 1.7f;
 			}
 
 			if (hud.GetDropWeaponInput()) {
@@ -93,6 +107,19 @@ public class PlayerController : MonoBehaviour
 				controller.DoDash();
 				dash = 0;
 				hud.SetDash(dash);
+			}
+
+			if (Input.GetButton("Zoom")) {
+				if (cam.distance != -1f) {
+					cam.distance = -1f;
+					cam.orginOffsetWithRotation.x = 0.5f;
+					cam.sensitivity = 0.9f;
+				}
+			}
+			else if (cam.distance != 3f) {
+				cam.distance = 3f;
+				cam.orginOffsetWithRotation.x = 1f;
+				cam.sensitivity = 1.7f;
 			}
 
         	if (hud.DropWeaponHold(Input.GetButton("Drop"))) {

@@ -257,6 +257,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f78830dd82e2b94e9381bdd2a302f95, type: 3}
+--- !u!114 &327057989 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7969926913890490788, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
+  m_PrefabInstance: {fileID: 2088824833}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056938e0a39ec484aa0f5d52a6c3ef4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &344107111 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1048690746478793422, guid: efa578e97680c944babf5aed7f57d252, type: 3}
@@ -2066,6 +2077,7 @@ MonoBehaviour:
   pew: {fileID: 919132149195653577}
   drop: {fileID: 255570266653515592}
   controller: {fileID: 919132149089522421}
+  cam: {fileID: 327057989}
   hud: {fileID: 2088824834}
   hand: {fileID: 543450653666745202}
 --- !u!1 &919132149195653576
