@@ -5,12 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class LazerBeam : MonoBehaviour
 {
-	private float beginScale;
+	private Vector3 beginScale;
 	private float length;
 	private float counter;
 	private float lifeSpan;
 	private MeshRenderer mesh;
-
+	Vector3 tempVec;
+	
 	// Update is called once per frame
 	void Update()
     {
@@ -20,7 +21,7 @@ public class LazerBeam : MonoBehaviour
 			return;
 		}
 		float t = counter / lifeSpan;
-		Vector3 tempVec = Vector3.one * t * beginScale;
+		tempVec = beginScale * t;
 		tempVec.z = length;
 		transform.localScale = tempVec;
 
@@ -41,7 +42,7 @@ public class LazerBeam : MonoBehaviour
 		if (!instant.TryGetComponent<LazerBeam>(out laser)) {
 			laser = instant.AddComponent<LazerBeam>();
 		}
-		laser.beginScale = instant.transform.localScale.x;
+		laser.beginScale = instant.transform.localScale;
 		laser.length = Vector3.Distance(start, end);
 		Vector3 tempVec = instant.transform.localScale;
 		tempVec.z = laser.length;
