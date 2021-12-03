@@ -1316,10 +1316,6 @@ PrefabInstance:
       propertyPath: following
       value: 
       objectReference: {fileID: 543450653631907912}
-    - target: {fileID: 7969926913890490788, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
-      propertyPath: orginOffset.x
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7969926913890490789, guid: 2dbc258424b1f2141a9f067e878dc4c7, type: 3}
       propertyPath: m_Name
       value: CameraHolder

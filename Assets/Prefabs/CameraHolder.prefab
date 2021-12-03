@@ -1553,7 +1553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   following: {fileID: 0}
   orginOffset: {x: 0, y: 1.75, z: 0}
-  orginOffsetWithRotation: {x: 0, y: 0, z: 0}
+  orginOffsetWithRotation: {x: 1, y: 0, z: 0}
   clipPlaneOffset: {x: 0.2, y: 0.1}
   distance: 3
   sensitivity: 1.7
