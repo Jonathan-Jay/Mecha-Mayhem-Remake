@@ -13,34 +13,22 @@ public class Shotgun : Gun
 	int ammo = 10;
 	float cooldown = 0;
 
-	public int Shoot(Vector3 start, Vector3 direction, Vector3 muzzel)
+	public override int Shoot(Vector3 start, Vector3 direction, Vector3 muzzel)
 	{
 		int killed = 0;
 		//TODO: SHOOT
 		if (cooldown <= 0)
 		{
 			--ammo;
-			RaycastHit hit;
-			Vector3 endPos = start + direction * range;
-			if (Physics.Raycast(start, direction, out hit, range))
-			{
-				if (hit.transform.CompareTag("Turret"))
-				{
-					if (hit.transform.GetComponent<TrackingFiring>().TakeDamage(damage))
-					{
-						++killed;
-					}
-					++killed;
-				}
-				endPos = hit.point;
-			}
+			Vector3 endPos;
+			killed = ShootLaser(start, direction, out endPos, range, damage);
 			LazerBeam.CreateBeam(laserPrefab, muzzel, endPos, 0.1f);
 			cooldown = 1.25f;
 		}
 		return killed;
 	}
 
-	public bool Reload()
+	public override bool Reload()
 	{
 		if (ammo == 10)
 			return false;
@@ -48,11 +36,11 @@ public class Shotgun : Gun
 		return true;
 	}
 
-	public bool GetAuto() {
+	public override bool GetAuto() {
 		return false;
 	}
 
-	public void Update()
+	public override void Update()
 	{
 		if (cooldown > 0)
 		{
@@ -60,17 +48,17 @@ public class Shotgun : Gun
 		}
 	}
 
-	public void SetCooldown(float amt)
+	public override void SetCooldown(float amt)
 	{
 		cooldown = amt;
 	}
 
-	public float GetAmmoPercent()
+	public override float GetAmmoPercent()
 	{
 		return ((float)ammo) * div;
 	}
 
-	public Gun.GunType GetGunType()
+	public override Gun.GunType GetGunType()
 	{
 		return Gun.GunType.Shotgun;
 	}

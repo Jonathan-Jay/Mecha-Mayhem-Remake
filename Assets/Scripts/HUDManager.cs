@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
 {
-	public GameObject onScreenControls;
+	public GameObject mobileHUD;
+	public RectTransform weaponAnchor;
+	public RectTransform scoreAnchor;
 	public Joystick leftJoystick;
 	public Joystick rightJoystick;
 	public bool mobileMode {get; private set;}
@@ -34,12 +36,20 @@ public class HUDManager : MonoBehaviour
 			case RuntimePlatform.Android:
 			case RuntimePlatform.IPhonePlayer:
 				mobileMode = true;
+				weaponAnchor.anchoredPosition = Vector2.one * -10;
+				scoreAnchor.anchoredPosition = Vector2.zero;
+				scoreAnchor.anchorMin = scoreAnchor.anchorMax = Vector2.up;
+				RectTransform newRect = healButton.GetComponent<RectTransform>();
+				RectTransform curRect = healthPickup.GetComponent<RectTransform>();
+				curRect.anchorMax = curRect.anchorMin = newRect.anchorMax;
+				curRect.offsetMax = newRect.offsetMax;
+				curRect.offsetMin = newRect.offsetMin;
 				break;
 			default:
 				mobileMode = false;
 				break;
 		}
-		onScreenControls.SetActive(mobileMode);
+		mobileHUD.SetActive(mobileMode);
 
         healthBar.maxValue = healthMax;
         healthBar.value = healthMax;
@@ -107,9 +117,6 @@ public class HUDManager : MonoBehaviour
 
 	public RectButton weaponButton;
 	float dropCounter = 0;
-	public bool GetSwapWeaponInput() {
-		return weaponButton.GetUp();
-	}
 	public bool GetDropWeaponInput() {
 		if (weaponButton.GetUp()) {
 			dropCounter = 0f;
@@ -145,10 +152,13 @@ public class HUDManager : MonoBehaviour
 		return false;
 	}
 
-	public RectButton ShootButton;
+	public RectButton shootButton;
 	public bool GetShootInput(bool autoMode) {
 		if (autoMode)
-			return ShootButton.touched;
-		return ShootButton.GetDown();
+			return shootButton.touched;
+		return shootButton.GetDown();
 	}
+
+	public RectButton dashButton;
+	public RectButton jumpButton;
 }

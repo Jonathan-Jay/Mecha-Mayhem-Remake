@@ -35,30 +35,29 @@ public class PlayerController : MonoBehaviour
 			hud.SetScore(Random.Range(0, 100));
 		}
 
-		if (dash < hud.dashMax) {
-			dash += Time.deltaTime;
-			if (dash >= hud.dashMax)
-				dash = hud.dashMax;
-			hud.SetDash(dash);
-		}
-		else if (Input.GetButton("Dash")) {
-			controller.DoDash();
-			dash = 0;
-			hud.SetDash(dash);
-		}
+		if (hud.mobileMode) {
+			if (dash < hud.dashMax) {
+				dash += Time.deltaTime;
+				if (dash >= hud.dashMax)
+					dash = hud.dashMax;
+				hud.SetDash(dash);
+			}
+			else if (hud.dashButton.touched) {
+				controller.DoDash();
+				dash = 0;
+				hud.SetDash(dash);
+			}
 
-		if (!hud.mobileMode) {
-        	if (Input.GetButtonDown("SwapWeapon")) {
+			if (hud.GetDropWeaponInput()) {
+				DropWeapon();
+			}
+			if (hud.weaponButton.GetUp()) {
 				if (offhand != null) {
 					SwapWeapon();
 				}
 			}
 
-        	if (hud.DropWeaponHold(Input.GetButton("Drop"))) {
-				DropWeapon();
-			}
-
-			if (Input.GetButtonDown("Heal")) {
+			if (hud.GetHealInput()) {
 				if (hasHeal > 0 && health != hud.healthMax) {
 					hud.SetHealthPickup(--hasHeal);
 					health = Mathf.Min(health + 25, hud.healthMax);
@@ -68,7 +67,7 @@ public class PlayerController : MonoBehaviour
 
 			if (mainhand != null) {
 				mainhand.Update();
-				if (Input.GetButtonDown("Fire") || (mainhand.GetAuto() && Input.GetButton("Fire"))) {
+				if (hud.GetShootInput(mainhand.GetAuto())) {
 					int change = mainhand.Shoot(hud.transform.position, hud.transform.forward, gun.GetChild(0).position);
 					if (change == 2) {
 						++score;
@@ -83,17 +82,28 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 		else {
-			if (hud.GetSwapWeaponInput()) {
+			if (dash < hud.dashMax) {
+				dash += Time.deltaTime;
+				if (dash >= hud.dashMax)
+					dash = hud.dashMax;
+				hud.SetDash(dash);
+			}
+			else if (Input.GetButton("Dash")) {
+				controller.DoDash();
+				dash = 0;
+				hud.SetDash(dash);
+			}
+
+        	if (hud.DropWeaponHold(Input.GetButton("Drop"))) {
+				DropWeapon();
+			}
+			if (Input.GetButtonDown("SwapWeapon")) {
 				if (offhand != null) {
 					SwapWeapon();
 				}
 			}
 
-			if (hud.GetDropWeaponInput()) {
-				DropWeapon();
-			}
-
-			if (hud.GetHealInput()) {
+			if (Input.GetButtonDown("Heal")) {
 				if (hasHeal > 0 && health != hud.healthMax) {
 					hud.SetHealthPickup(--hasHeal);
 					health = Mathf.Min(health + 25, hud.healthMax);
@@ -103,7 +113,7 @@ public class PlayerController : MonoBehaviour
 
 			if (mainhand != null) {
 				mainhand.Update();
-				if (hud.GetShootInput(mainhand.GetAuto())) {
+				if (Input.GetButtonDown("Fire") || (mainhand.GetAuto() && Input.GetButton("Fire"))) {
 					int change = mainhand.Shoot(hud.transform.position, hud.transform.forward, gun.GetChild(0).position);
 					if (change == 2) {
 						++score;

@@ -12,12 +12,12 @@ public class RectButton : MonoBehaviour
 	int lastSize = 0;
 
 	private void Start() {
-		RectTransform trans = GetComponentInChildren<RectTransform>();
+		RectTransform trans = GetComponent<RectTransform>();
 		Vector2 scale = Camera.main.pixelRect.size / trans.GetComponentInParent<CanvasScaler>().referenceResolution;
 		min = Camera.main.pixelRect.size * trans.anchorMin
-			+ (trans.anchoredPosition - (Vector2.one - trans.pivot) * trans.rect.size) * scale;
+			+ (trans.anchoredPosition - trans.pivot * trans.rect.size) * scale;
 		max = Camera.main.pixelRect.size * trans.anchorMax
-			+ (trans.anchoredPosition + trans.pivot * trans.rect.size) * scale;
+			+ (trans.anchoredPosition + (Vector2.one - trans.pivot) * trans.rect.size) * scale;
 	}
 
     // Update is called once per frame

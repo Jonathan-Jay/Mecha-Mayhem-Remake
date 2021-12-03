@@ -47,15 +47,20 @@ public class CharController : MonoBehaviour {
 		bool movement = false;
 
 		//Store input from each update to be considered for fixed updates, dont do needless addition of 0 if unneeded
-		curInputs.tempAxis.Set(
-			Input.GetAxisRaw("Horizontal") + hud.leftJoystick.Horizontal,
-			Input.GetAxisRaw("Vertical") + hud.leftJoystick.Vertical
-		);
+		if (hud.mobileMode) {
+			curInputs.tempAxis.Set(hud.leftJoystick.Horizontal, hud.leftJoystick.Vertical);
+        	if (hud.jumpButton.GetDown() && curInputs.jump == 0 && grounded)
+				curInputs.jump = 5;
+		}
+		else {
+			curInputs.tempAxis.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        	if (Input.GetButtonDown("Jump") && curInputs.jump == 0 && grounded)
+				curInputs.jump = 5;
+		}
         curInputs.tempAxis.Normalize();
         if (curInputs.tempAxis.x != 0f) { curInputs.axis.x += curInputs.tempAxis.x;	movement = true; }
 		if (curInputs.tempAxis.y != 0f) { curInputs.axis.y += curInputs.tempAxis.y;	movement = true; }
         ++curInputs.framesPassed;
-        if (Input.GetButtonDown("Jump") && curInputs.jump == 0 && grounded) curInputs.jump = 5;
 		anim.SetBool("schmooving", movement);
     }
 
