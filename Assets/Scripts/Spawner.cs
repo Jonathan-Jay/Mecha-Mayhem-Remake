@@ -12,6 +12,8 @@ public class Spawner : MonoBehaviour
 	public float delayMin = 10;
 
 	[SerializeField]
+	AudioSource[] sounds = new AudioSource[2];
+	[SerializeField]
 	private float counter = 0;
 	private Gun.GunType current = Gun.GunType.Empty;
 
@@ -54,24 +56,25 @@ public class Spawner : MonoBehaviour
 		if (other.CompareTag("Player")) {
 			if (current == Gun.GunType.HealPack) {
 				if (other.GetComponent<PlayerController>().PickUpHealPack()) {
-					current = Gun.GunType.Empty;
-					counter = Random.Range(delayMin, delayMax);
-					if (gunMesh.transform.childCount > 0) {
-						Destroy(gunMesh.transform.GetChild(0).gameObject);
-					}
-					spawnerAnimator.SetBool("open", false);
+					reset(0);
 				}
 			}
 			else if (current != Gun.GunType.Empty) {
-				if (other.GetComponent<PlayerController>().PickUpWeapon(current)) {
-					current = Gun.GunType.Empty;
-					counter = Random.Range(delayMin, delayMax);
-					if (gunMesh.transform.childCount > 0) {
-						Destroy(gunMesh.transform.GetChild(0).gameObject);
-					}
-					spawnerAnimator.SetBool("open", false);
+				int val = other.GetComponent<PlayerController>().PickUpWeapon(current);
+				if (val > 0) {
+					reset(val - 1);
 				}
 			}
 		}
+	}
+
+	void reset(int sound) {
+		current = Gun.GunType.Empty;
+		counter = Random.Range(delayMin, delayMax);
+		sounds[sound].Play();
+		if (gunMesh.transform.childCount > 0) {
+			Destroy(gunMesh.transform.GetChild(0).gameObject);
+		}
+		spawnerAnimator.SetBool("open", false);
 	}
 }

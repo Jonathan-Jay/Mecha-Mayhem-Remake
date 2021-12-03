@@ -23,9 +23,6 @@ public class PlayerController : MonoBehaviour
 
 		hud.SetScore(0);
 
-		PickUpWeapon(Gun.GunType.Pistol);
-		PickUpWeapon(Gun.GunType.Rifle);
-
 		UpdateHUD();
 	}
 
@@ -187,7 +184,8 @@ public class PlayerController : MonoBehaviour
 		return false;
 	}
 
-	public bool PickUpWeapon(Gun.GunType weapon) {
+	//returns 1 for gun, 2 for reload
+	public int PickUpWeapon(Gun.GunType weapon) {
 		//first check if main hand is empty
 		if (mainhand == null) {
 			//if main is empty, you can give gun right away
@@ -196,27 +194,27 @@ public class PlayerController : MonoBehaviour
 				gun = Instantiate(IconStorage.gunPrefabs[(int)weapon], hand).transform;
 			}
 			UpdateHUD();
-			return true;
+			return 1;
 		}
 		//then if it matches
 		else if (mainhand.GetGunType() == weapon) {
 			if (mainhand.Reload()) {
 				hud.SetAmmoBar(mainhand.GetAmmoPercent());
-				return true;
+				return 2;
 			}
-			else	return false;
 		}
 		//then if offhand is empty
 		else if (offhand == null) {
 			offhand = IconStorage.GetGunFromType(weapon);
 			UpdateHUD();
-			return true;
+			return 1;
 		}
 		//then if it matches
 		else if (offhand.GetGunType() == weapon) {
-			return offhand.Reload();
+			if (offhand.Reload())
+				return 2;
 		}
-		return false;
+		return 0;
 	}
 
 	public bool dead() {

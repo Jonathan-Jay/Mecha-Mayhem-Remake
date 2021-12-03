@@ -16,6 +16,8 @@ public class CharController : MonoBehaviour {
     public float jumpCheckYOffset = 0.52f;
     public float jumpCheckRadOffset = 0.975f;
 
+	[SerializeField]
+	private AudioSource stepSound;
     private Rigidbody RB3D;
     private Animator anim;
 
@@ -62,6 +64,9 @@ public class CharController : MonoBehaviour {
 		if (curInputs.tempAxis.y != 0f) { curInputs.axis.y += curInputs.tempAxis.y;	movement = true; }
         ++curInputs.framesPassed;
 		anim.SetBool("schmooving", movement);
+		if (movement && !stepSound.isPlaying) {
+			stepSound.Play();
+		}
     }
 
     private void FixedUpdate() {
