@@ -38,6 +38,12 @@ public class RectButton : MonoBehaviour
 		lastSize = Input.touchCount;
     }
 
+	void OnDisable() {
+		lastSize = 0;
+		lastTouched = false;
+		touched = false;
+	}
+
 	bool AABB(Vector2 pos) {
 		return (
 			min.x < pos.x && max.x > pos.x &&

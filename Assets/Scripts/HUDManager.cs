@@ -114,6 +114,10 @@ public class HUDManager : MonoBehaviour
 		}
 	}
 
+	public void CanShoot(bool val) {
+		shootButton.gameObject.SetActive(val);
+	}
+
 
 	public RectButton weaponButton;
 	float dropCounter = 0;
@@ -154,6 +158,8 @@ public class HUDManager : MonoBehaviour
 
 	public RectButton shootButton;
 	public bool GetShootInput(bool autoMode) {
+		if (!shootButton.gameObject.activeInHierarchy)	return false;
+
 		if (autoMode)
 			return shootButton.touched;
 		return shootButton.GetDown();

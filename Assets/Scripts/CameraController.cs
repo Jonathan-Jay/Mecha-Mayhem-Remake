@@ -47,16 +47,10 @@ public class CameraController : MonoBehaviour {
         else {
             float rotMod = transform.rotation.eulerAngles.x <= 90 ? transform.rotation.eulerAngles.x + 360 : transform.rotation.eulerAngles.x;
             if (hud.mobileMode) {
-				lookInput.Set(
-					hud.rightJoystick.Horizontal,
-					hud.rightJoystick.Vertical
-				);
+				lookInput.Set(hud.rightJoystick.Horizontal, hud.rightJoystick.Vertical);
 			}
 			else {
-				lookInput.Set(
-					Input.GetAxis("Mouse X"),
-					Input.GetAxis("Mouse Y")
-				);
+				lookInput.Set(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 			}
             transform.rotation = Quaternion.Euler(Mathf.Clamp(rotMod - lookInput.y * sensitivity, rotXMinMax.x, rotXMinMax.y),
                 transform.rotation.eulerAngles.y + lookInput.x * sensitivity, 0);

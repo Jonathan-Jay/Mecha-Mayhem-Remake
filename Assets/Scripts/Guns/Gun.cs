@@ -14,7 +14,7 @@ public abstract class Gun
 		HealPack,
 	}
 
-    public abstract int Shoot(Vector3 start, Vector3 direction, Vector3 muzzel);
+    public abstract int Shoot(Vector3 start, Vector3 direction, Vector3 muzzel, AudioSource pew);
 	public abstract bool Reload();
 	public abstract bool GetAuto();
 	public abstract void Update();

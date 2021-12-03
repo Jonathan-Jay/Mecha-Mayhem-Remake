@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TrackingFiring : MonoBehaviour
 {
+	public AudioSource pew;
+	public AudioSource hit;
 	public float health = 100f;
     public float turnSpeed = 1f;
     public float scanFOV = 135f;
@@ -158,6 +160,7 @@ public class TrackingFiring : MonoBehaviour
 				if (shootCounter > delayPerShot) {
 					shootCounter -= delayPerShot;
                 	LazerBeam.CreateBeam(laserStyle, muzzel.position, target.transform.position + Vector3.up, 0.1f);
+					pew.Play();
 					target.GetComponent<PlayerController>().TakeDamage(damage);
 				}
             }
@@ -185,6 +188,7 @@ public class TrackingFiring : MonoBehaviour
 			Destroy(gameObject);
 			return true;
 		}
+		hit.Play();
 		return false;
 	}
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+	public AudioSource pew;
+	public AudioSource drop;
 	public CharController controller;
 	public HUDManager hud;
 	public Transform hand;
@@ -24,6 +26,7 @@ public class PlayerController : MonoBehaviour
 		hud.SetScore(0);
 
 		UpdateHUD();
+		hud.CanShoot(mainhand != null);
 	}
 
     void Update()
@@ -58,6 +61,7 @@ public class PlayerController : MonoBehaviour
 				if (hasHeal > 0 && health != hud.healthMax) {
 					hud.SetHealthPickup(--hasHeal);
 					health = Mathf.Min(health + 25, hud.healthMax);
+					pew.Play();
 					hud.SetHealth(health);
 				}
 			}
@@ -65,7 +69,7 @@ public class PlayerController : MonoBehaviour
 			if (mainhand != null) {
 				mainhand.Update();
 				if (hud.GetShootInput(mainhand.GetAuto())) {
-					int change = mainhand.Shoot(hud.transform.position, hud.transform.forward, gun.GetChild(0).position);
+					int change = mainhand.Shoot(hud.transform.position, hud.transform.forward, gun.GetChild(0).position, pew);
 					if (change == 2) {
 						++score;
 						UpdateHUD();
@@ -111,7 +115,7 @@ public class PlayerController : MonoBehaviour
 			if (mainhand != null) {
 				mainhand.Update();
 				if (Input.GetButtonDown("Fire") || (mainhand.GetAuto() && Input.GetButton("Fire"))) {
-					int change = mainhand.Shoot(hud.transform.position, hud.transform.forward, gun.GetChild(0).position);
+					int change = mainhand.Shoot(hud.transform.position, hud.transform.forward, gun.GetChild(0).position, pew);
 					if (change == 2) {
 						++score;
 						UpdateHUD();
@@ -161,9 +165,11 @@ public class PlayerController : MonoBehaviour
 		if (mainhand != null) {
 			hud.SetMainWeapon(IconStorage.gunIcons[(int)Gun.GunType.Empty]);
 			mainhand = null;
+			drop.Play();
 			Destroy(gun.gameObject);
 			SwapWeapon();
 		}
+		hud.CanShoot(mainhand != null);
 	}
 
 	public bool PickUpHealPack() {
@@ -193,6 +199,7 @@ public class PlayerController : MonoBehaviour
 			if (weapon != Gun.GunType.Empty) {
 				gun = Instantiate(IconStorage.gunPrefabs[(int)weapon], hand).transform;
 			}
+			hud.CanShoot(true);
 			UpdateHUD();
 			return 1;
 		}

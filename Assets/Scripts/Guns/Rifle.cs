@@ -13,13 +13,14 @@ public class Rifle : Gun
 	int ammo = 10;
 	float cooldown = 0;
 
-	public override int Shoot(Vector3 start, Vector3 direction, Vector3 muzzel) {
+	public override int Shoot(Vector3 start, Vector3 direction, Vector3 muzzel, AudioSource pew) {
 		int killed = 0;
 		//TODO: SHOOT
 		if (cooldown <= 0) {
 			--ammo;
 			Vector3 endPos;
 			killed = ShootLaser(start, direction, out endPos, range, damage);
+			pew.Play();
 			LazerBeam.CreateBeam(laserPrefab, muzzel, endPos, 0.1f);
 			cooldown = 1.5f;
 		}
