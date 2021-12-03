@@ -69,14 +69,15 @@ public class CameraController : MonoBehaviour {
 
         foreach (int dir in new int[3] { 1, -1, 0 })
             if (dir == 0 || !Physics.Linecast(orginOfAll, orginOfAll + (orginOffsetWithRotationTemp + transform.right * calc2 * 0.5f) * dir, out ray, layer)) {
-                orginOffsetWithRotationTemp = orginOffsetWithRotationTemp * dir;
+                //remove local rotation from offset and apply direction modifier, local rotaion was originally applied to not do the math multiple times
+                orginOffsetWithRotationTemp = orginOffsetWithRotation * dir;
                 break;
             }
 
-        orginOffsetWithRotationCurrent = Vector3.SmoothDamp(orginOffsetWithRotationCurrent, orginOffsetWithRotationTemp, ref orginOffsetWithRotationVel, 0.05f, 1f, Time.fixedDeltaTime);
-        orginOfAll += orginOffsetWithRotationCurrent;
+        orginOffsetWithRotationCurrent = Vector3.SmoothDamp(orginOffsetWithRotationCurrent, orginOffsetWithRotationTemp, ref orginOffsetWithRotationVel, 0.1f, 5f, Time.fixedDeltaTime);
+        orginOfAll += transform.rotation * orginOffsetWithRotationCurrent;
 
-        //getting Hypotnuse dist
+        //Checking from viewing orgin to each corner of camera's "sensor" for any obstruction
         foreach (Vector3 vec in new Vector3[4] { new Vector3(calc2, calc1, calc3), new Vector3(-calc2, calc1, calc3), new Vector3(calc2, -calc1, calc3), new Vector3(-calc2, -calc1, calc3) })
             if (Physics.Linecast(orginOfAll, orginOfAll + transform.rotation * (Vector3.back * distance + vec), out ray, layer) && ray.distance < calcDist)
                 calcDist = ray.distance;
