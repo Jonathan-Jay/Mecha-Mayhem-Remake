@@ -5,8 +5,8 @@ using UnityEngine;
 //4
 public class Shotgun : Gun
 {
-	static float damage = 50f;
-	static float range = 100f;
+	static float damage = 20f;
+	static float range = 50f;
 	static float div = 1f / 10f;
 	public static GameObject laserPrefab;
 

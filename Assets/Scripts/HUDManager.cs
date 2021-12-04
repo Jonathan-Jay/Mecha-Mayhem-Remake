@@ -32,7 +32,7 @@ public class HUDManager : MonoBehaviour
 	{
 		switch (Application.platform)
 		{
-			case RuntimePlatform.WindowsEditor:
+			//case RuntimePlatform.WindowsEditor:
 			case RuntimePlatform.Android:
 			case RuntimePlatform.IPhonePlayer:
 				mobileMode = true;
