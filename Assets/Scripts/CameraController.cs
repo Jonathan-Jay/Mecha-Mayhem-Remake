@@ -31,7 +31,7 @@ public class CameraController : MonoBehaviour {
 
     // LateUpdate is called once per frame at the end of everything
     void LateUpdate() {
-		if (hud.mobileMode) {
+		if (!hud.mobileMode) {
         	if (Input.GetKeyDown(KeyCode.Escape)) {
             	Cursor.lockState = CursorLockMode.None;
             	Cursor.visible = true;
